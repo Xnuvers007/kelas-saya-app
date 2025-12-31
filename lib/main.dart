@@ -4,6 +4,9 @@ import 'package:flutter/services.dart';
 import 'package:flutter_pdfview/flutter_pdfview.dart';
 import 'package:path_provider/path_provider.dart';
 
+// --- IMPORT FILE QUIZ DISINI ---
+import 'quiz_page.dart'; 
+
 void main() {
   runApp(const MyApp());
 }
@@ -55,7 +58,7 @@ class HalamanKelasSaya extends StatefulWidget {
 class _HalamanKelasSayaState extends State<HalamanKelasSaya> {
   int _selectedIndex = 1; // Default ke tab "Kelas Saya"
 
-  // Data Dummy (Sesuaikan nama file PDF dengan yang ada di folder assets Anda)
+  // Data Dummy 
   final List<Pertemuan> listKewarganegaraan = [
     Pertemuan(labelPertemuan: "Pertemuan 1", judul: "Pancasila dan Nilai Bangsa", isCompleted: true, pdfAssetPath: "assets/pdfs/materi1.pdf"),
     Pertemuan(labelPertemuan: "Pertemuan 2", judul: "Hak dan Kewajiban Warga Negara", isCompleted: false, pdfAssetPath: "assets/pdfs/materi1.pdf"),
@@ -114,7 +117,7 @@ class _HalamanKelasSayaState extends State<HalamanKelasSaya> {
     );
   }
 
-  // Widget Header Text (Kewarganegaraan / Sistem Operasi)
+  // Widget Header Text
   Widget _buildSectionHeader(String title) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 10.0),
@@ -129,7 +132,7 @@ class _HalamanKelasSayaState extends State<HalamanKelasSaya> {
     );
   }
 
-  // Widget Card Pertemuan (Kotak Putih)
+  // Widget Card Pertemuan
   Widget _buildMeetingCard(BuildContext context, Pertemuan data) {
     return Card(
       elevation: 2,
@@ -138,7 +141,7 @@ class _HalamanKelasSayaState extends State<HalamanKelasSaya> {
       child: InkWell(
         borderRadius: BorderRadius.circular(15),
         onTap: () {
-          // Navigasi ke Halaman Detail (Materi & Quiz)
+          // Navigasi ke Halaman Detail
           Navigator.push(
             context,
             MaterialPageRoute(builder: (context) => HalamanDetailMateri(data: data)),
@@ -148,11 +151,11 @@ class _HalamanKelasSayaState extends State<HalamanKelasSaya> {
           padding: const EdgeInsets.all(16.0),
           child: Row(
             children: [
-              // 1. Tag Biru "Pertemuan X"
+              // 1. Tag Biru
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                 decoration: BoxDecoration(
-                  color: Colors.blue, // Warna biru tombol
+                  color: Colors.blue,
                   borderRadius: BorderRadius.circular(20),
                 ),
                 child: Text(
@@ -209,9 +212,10 @@ class _HalamanDetailMateriState extends State<HalamanDetailMateri> {
   String localPath = "";
   bool isLoading = true;
 
-@override
+  @override
   void initState() {
     super.initState();
+    // Gunakan nama file asli agar tidak bentrok
     String fileName = widget.data.pdfAssetPath.split('/').last;
 
     fromAsset(widget.data.pdfAssetPath, fileName).then((f) {
@@ -224,7 +228,7 @@ class _HalamanDetailMateriState extends State<HalamanDetailMateri> {
     });
   }
 
-  // Fungsi helper untuk load asset
+  // Fungsi helper load asset
   Future<File> fromAsset(String asset, String filename) async {
     try {
       var dir = await getApplicationDocumentsDirectory();
@@ -249,12 +253,12 @@ class _HalamanDetailMateriState extends State<HalamanDetailMateri> {
             child: isLoading
                 ? const Center(child: CircularProgressIndicator())
                 : PDFView(
-              filePath: localPath,
-              enableSwipe: true,
-              swipeHorizontal: false,
-              autoSpacing: true,
-              pageFling: true,
-            ),
+                    filePath: localPath,
+                    enableSwipe: true,
+                    swipeHorizontal: false,
+                    autoSpacing: true,
+                    pageFling: true,
+                  ),
           ),
 
           // Area Tombol Quiz (Sticky di bawah)
@@ -273,12 +277,15 @@ class _HalamanDetailMateriState extends State<HalamanDetailMateri> {
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
                 ),
                 onPressed: () {
-                  // Logika Masuk Quiz
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text("Masuk ke halaman Quiz...")),
+                  // --- NAVIGASI KE HALAMAN QUIZ DISINI ---
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => HalamanQuiz(judulMateri: widget.data.judul),
+                    ),
                   );
                 },
-                child: const Text("Mulai Quiz", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                child: const Text("Mulai Quiz", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white)),
               ),
             ),
           ),
