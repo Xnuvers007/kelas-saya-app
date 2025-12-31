@@ -209,11 +209,14 @@ class _HalamanDetailMateriState extends State<HalamanDetailMateri> {
   String localPath = "";
   bool isLoading = true;
 
-  @override
+@override
   void initState() {
     super.initState();
-    // Memuat PDF dari assets ke penyimpanan sementara agar bisa dibaca PDFView
-    fromAsset(widget.data.pdfAssetPath, 'temp.pdf').then((f) {
+    String fileName = widget.data.pdfAssetPath.split('/').last;
+
+    fromAsset(widget.data.pdfAssetPath, fileName).then((f) {
+      if (!mounted) return; 
+      
       setState(() {
         localPath = f.path;
         isLoading = false;
